@@ -13,7 +13,11 @@
     "ts": "tsc",
     "ts-watch": "tsc --watch"
   },
+  "resolutions": {
+    "@types/react": "17.0.21"
+  },
   "dependencies": {
+    "@react-navigation/bottom-tabs": "^6.3.1",
     "@react-navigation/native": "^6.0.10",
     "@react-navigation/native-stack": "^6.6.2",
     "expo": "~44.0.0",

@@ -1,0 +1,19 @@
+import type { NavigatorScreenParams } from '@react-navigation/native'
+import type { ComponentType } from 'react'
+
+export type RootStackParamList = {
+  Root: NavigatorScreenParams<RootTabParamList>
+}
+
+export type RootTabParamList = {
+  HomeStack: undefined
+  ProfileStack: undefined
+}
+
+export type TabsDataParams = {
+  name: keyof RootTabParamList
+  component: ComponentType<unknown>
+  options: {
+    tabBarLabel: string
+  }
+}[]
