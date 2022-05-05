@@ -5,6 +5,7 @@ export type ButtonProps = {
   variant: 'primary' | 'secondary'
   disabled?: boolean
   loading?: boolean
+  onPress: () => void
 }
 
 export type Style = {

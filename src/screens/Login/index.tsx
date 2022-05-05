@@ -3,11 +3,14 @@ import {
   KeyboardAvoidingView, StyleSheet, Text, TextInput, View
 } from 'react-native'
 
+import { useUserContext } from 'context/user'
 import Button from 'elements/Button'
 
 const Login = () => {
   const [email, setEmail] = useState<string>('')
   const [password, setPassword] = useState<string>('')
+
+  const { login } = useUserContext()
 
   return (
     <KeyboardAvoidingView
@@ -23,6 +26,8 @@ const Login = () => {
             value={email}
             onChangeText={text => setEmail(text)}
             style={styles.input}
+            keyboardType='email-address'
+            autoCapitalize='none'
           />
           <TextInput
             placeholder='Password'
@@ -36,11 +41,13 @@ const Login = () => {
           <Button
             title='Login'
             variant='primary'
+            onPress={() => login(email, password)}
           />
           <View style={styles.spacer} />
           <Button
             title='Register'
             variant='secondary'
+            onPress={() => console.log('Navigate to Registration screen')}
           />
         </View>
       </View>

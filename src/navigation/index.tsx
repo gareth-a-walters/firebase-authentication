@@ -1,14 +1,18 @@
 import { NavigationContainer } from '@react-navigation/native'
 import React from 'react'
 
-// import RootNavigator from 'navigation/navigators/rootNavigator'
+import { useUserContext } from 'context/user'
+import RootNavigator from 'navigation/navigators/rootNavigator'
 import Login from 'screens/Login'
 
-const Navigation = () => (
-  <NavigationContainer>
-    <Login />
-    {/* <RootNavigator /> */}
-  </NavigationContainer>
-)
+const Navigation = () => {
+  const { isLoggedIn } = useUserContext()
+
+  return (
+    <NavigationContainer>
+      {isLoggedIn ? <RootNavigator /> : <Login />}
+    </NavigationContainer>
+  )
+}
 
 export default Navigation
