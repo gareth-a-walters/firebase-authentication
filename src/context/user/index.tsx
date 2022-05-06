@@ -1,8 +1,11 @@
 import {
   onAuthStateChanged,
+  createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut,
-  User as FirebaseUser
+  User as FirebaseUser,
+  updateProfile,
+  UserCredential,
 } from 'firebase/auth'
 import React, {
   createContext,
@@ -33,6 +36,29 @@ export const UserProvider: React.FC = ({ children }) => {
     return unsubscribe
   }, [])
 
+  const updateUserProfile = useCallback(async (user: FirebaseUser, username: string) => {
+    setLoading(true)
+    try {
+      await updateProfile(user, { displayName: username })
+    } catch (error) {
+      console.log(error)
+    }
+    setLoading(false)
+  }, [])
+
+  const register = useCallback(async (username: string, email: string, password: string) => {
+    setLoading(true)
+    try {
+      await createUserWithEmailAndPassword(auth, email, password)
+        .then(async (userCredential: UserCredential) => {
+          await updateUserProfile(userCredential.user, username)
+        })
+    } catch (error) {
+      console.log(error)
+    }
+    setLoading(false)
+  }, [updateUserProfile])
+
   const login = useCallback(async (email: string, password: string) => {
     try {
       await signInWithEmailAndPassword(auth, email, password)
@@ -51,16 +77,23 @@ export const UserProvider: React.FC = ({ children }) => {
   }, [])
 
   const value = useMemo(() => ({
-    loading,
     isLoggedIn: !!user,
+    loading,
     user,
+    register,
     login,
     logout
-  }), [loading, user, login, logout])
+  }), [
+    loading,
+    user,
+    register,
+    login,
+    logout
+  ])
 
   return (
     <Provider value={value}>
-      {children}
+      {!loading && children}
     </Provider>
   )
 }

@@ -2,15 +2,15 @@ import { NavigationContainer } from '@react-navigation/native'
 import React from 'react'
 
 import { useUserContext } from 'context/user'
+import LoggedOutStack from 'navigation/navigators/loggedOut'
 import RootNavigator from 'navigation/navigators/rootNavigator'
-import Login from 'screens/Login'
 
 const Navigation = () => {
   const { isLoggedIn } = useUserContext()
 
   return (
     <NavigationContainer>
-      {isLoggedIn ? <RootNavigator /> : <Login />}
+      {isLoggedIn ? <RootNavigator /> : <LoggedOutStack />}
     </NavigationContainer>
   )
 }

@@ -5,12 +5,14 @@ import { useUserContext } from 'context/user'
 
 const Home = () => {
   const { user } = useUserContext()
+
+  console.log(user)
   return (
     <View style={styles.container}>
       <Text>
         Hello
         {' '}
-        {user?.email}
+        {user?.displayName}
       </Text>
     </View>
   )

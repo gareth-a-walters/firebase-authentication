@@ -1,16 +1,18 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import React from 'react'
 
-import type { LoggedOutScreenProps, LoggedOutStackParamList } from 'navigation/navigators/loggedOut/types'
+import type { AllLoggedOutScreensProps, LoggedOutStackParamList } from 'navigation/navigators/loggedOut/types'
 import type { StackScreensDataParams } from 'navigation/types'
 
 import Login from 'screens/Login'
+import Register from 'screens/Register'
 
 const loggedOutScreens: StackScreensDataParams<
 LoggedOutStackParamList,
-LoggedOutScreenProps
+AllLoggedOutScreensProps
 > = [
-  { name: 'Login', component: Login }
+  { name: 'Login', component: Login },
+  { name: 'Register', component: Register },
 ]
 
 const loggedOutStackOptions = {

@@ -3,16 +3,17 @@ import {
   KeyboardAvoidingView, StyleSheet, Text, TextInput, View
 } from 'react-native'
 
-import type { LoginScreenProps } from 'navigation/navigators/loggedOut/types'
+import type { RegisterScreenProps } from 'navigation/navigators/loggedOut/types'
 
 import { useUserContext } from 'context/user'
 import Button from 'elements/Button'
 
-const Login = ({ navigation }: LoginScreenProps) => {
+const Register = ({ navigation }: RegisterScreenProps) => {
+  const [username, setUsername] = useState<string>('')
   const [email, setEmail] = useState<string>('')
   const [password, setPassword] = useState<string>('')
 
-  const { login } = useUserContext()
+  const { register } = useUserContext()
 
   return (
     <KeyboardAvoidingView
@@ -21,8 +22,14 @@ const Login = ({ navigation }: LoginScreenProps) => {
     >
       <View style={styles.innerContainer}>
         <Text style={styles.header}>Firebase Auth</Text>
-        <Text style={styles.title}>Login to your account</Text>
+        <Text style={styles.title}>Register for an account</Text>
         <View style={styles.inputContainer}>
+          <TextInput
+            placeholder='Username'
+            value={username}
+            onChangeText={text => setUsername(text)}
+            style={styles.input}
+          />
           <TextInput
             placeholder='Email'
             value={email}
@@ -41,15 +48,15 @@ const Login = ({ navigation }: LoginScreenProps) => {
         </View>
         <View style={styles.buttonContainer}>
           <Button
-            title='Login'
+            title='Create account'
             variant='primary'
-            onPress={() => login(email, password)}
+            onPress={() => register(username, email, password)}
           />
           <View style={styles.spacer} />
           <Button
-            title='Register'
+            title='Back to login'
             variant='secondary'
-            onPress={() => navigation.navigate('Register')}
+            onPress={() => navigation.navigate('Login')}
           />
         </View>
       </View>
@@ -96,4 +103,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default Login
+export default Register
