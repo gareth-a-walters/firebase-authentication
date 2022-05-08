@@ -1,5 +1,7 @@
 import React from 'react'
-import { Pressable, StyleSheet, Text } from 'react-native'
+import {
+  Animated, Pressable, StyleSheet, Text
+} from 'react-native'
 
 import type { ButtonProps, Style } from 'elements/Button/types'
 
@@ -8,6 +10,22 @@ const Button = ({
   variant = 'primary',
   ...props
 }: ButtonProps) => {
+  const animated = new Animated.Value(1)
+  const fadeIn = () => {
+    Animated.timing(animated, {
+      toValue: 0.1,
+      duration: 100,
+      useNativeDriver: true,
+    }).start()
+  }
+  const fadeOut = () => {
+    Animated.timing(animated, {
+      toValue: 1,
+      duration: 200,
+      useNativeDriver: true,
+    }).start()
+  }
+
   const styles: Style = {
     button: {
       justifyContent: 'center',
@@ -31,12 +49,22 @@ const Button = ({
     styles.button.borderColor = '#FFA000'
     styles.button.borderWidth = 2
     styles.text.color = '#F57C00'
+  } else if (variant === 'tertiary') {
+    styles.button.backgroundColor = '#FF8A65'
+    styles.button.borderColor = '#FF8A65'
+    styles.button.borderWidth = 2
+    styles.text.color = '#fff'
   }
 
   const parsedStyles = StyleSheet.create<Style>(styles)
 
   return (
-    <Pressable style={parsedStyles.button} {...props}>
+    <Pressable
+      onPressIn={fadeIn}
+      onPressOut={fadeOut}
+      style={parsedStyles.button}
+      {...props}
+    >
       <Text style={parsedStyles.text}>{title}</Text>
     </Pressable>
   )

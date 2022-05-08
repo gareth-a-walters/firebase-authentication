@@ -32,7 +32,6 @@ export const UserProvider: React.FC = ({ children }) => {
       setUser(firebaseUser)
       setLoading(false)
     })
-
     return unsubscribe
   }, [])
 
@@ -80,12 +79,14 @@ export const UserProvider: React.FC = ({ children }) => {
     isLoggedIn: !!user,
     loading,
     user,
+    updateUserProfile,
     register,
     login,
     logout
   }), [
     loading,
     user,
+    updateUserProfile,
     register,
     login,
     logout

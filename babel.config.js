@@ -7,10 +7,12 @@ module.exports = function(api) {
         'module-resolver',
         {
           alias: {
+            assets: './src/assets',
             context: './src/context',
             elements: './src/elements',
             navigation: './src/navigation',
             screens: './src/screens',
+            theme: './src/theme',
           },
         },
       ],

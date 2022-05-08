@@ -9,8 +9,8 @@ const Home = () => {
   console.log(user)
   return (
     <View style={styles.container}>
-      <Text>
-        Hello
+      <Text style={styles.welcomeMessage}>
+        Welcome
         {' '}
         {user?.displayName}
       </Text>
@@ -21,10 +21,14 @@ const Home = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#ECEFF1',
     alignItems: 'center',
     justifyContent: 'center',
   },
+  welcomeMessage: {
+    textAlign: 'center',
+    fontSize: 20,
+  }
 })
 
 export default Home

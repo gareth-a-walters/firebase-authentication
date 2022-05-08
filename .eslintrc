@@ -22,7 +22,7 @@
     "no-use-before-define": "off",
     "no-shadow": "off",
     "func-names": "off",
-    "no-nested-ternaryy": "off",
+    "no-nested-ternary": "off",
     "no-confusing-arrow": "off",
     "no-console": "off",
     "prefer-destructuring": "off",
