@@ -6,6 +6,7 @@ const theme = {
     navy: '#2C384A',
 
     white: '#FFFFFF',
+    black: '#000000',
 
     grey100: '#C7C7CD',
     grey300: '#959FAC',

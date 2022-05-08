@@ -1,12 +1,15 @@
 import React, { useCallback, useState } from 'react'
 import {
-  StyleSheet, Text, TextInput, View
+  KeyboardAvoidingView,
+  StyleSheet, Text, View
 } from 'react-native'
 
 import type { User as FirebaseUser } from 'firebase/auth'
 
 import { useUserContext } from 'context/user'
 import Button from 'elements/Button'
+import Icon from 'elements/Icon'
+import Input from 'elements/Input'
 import theme from 'theme'
 
 const Profile = () => {
@@ -20,44 +23,47 @@ const Profile = () => {
   }, [updateUserProfile])
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.header}>Profile</Text>
-      <View style={styles.detailsContainer}>
-        <Text>Username:</Text>
-        <TextInput
-          value={username}
-          style={styles.input}
-          editable={!disabled}
-          onChangeText={text => setUsername(text)}
-        />
-        <View style={styles.spacer} />
-        <Text>Email:</Text>
-        <TextInput
-          placeholder={user?.email || ''}
-          style={styles.input}
-          editable={false}
-        />
-      </View>
-      <View style={styles.buttonContainer}>
-        <Button
-          title={disabled === false ? 'Save details' : 'Edit details'}
-          variant='primary'
-          onPress={
+    <KeyboardAvoidingView style={styles.container}>
+      <View style={styles.innerContainer}>
+        <Text style={styles.header}>Profile</Text>
+        <View style={styles.detailsContainer}>
+          <Input
+            placeholder='Username'
+            value={username}
+            selectionColor={theme.colors.primary}
+            onChangeText={text => setUsername(text)}
+            iconLeft={<Icon name='profile' />}
+            editable={!disabled}
+            style={{ color: disabled ? theme.colors.grey300 : theme.colors.black }}
+          />
+          <View style={styles.spacer} />
+          <Input
+            placeholder={user?.email || ''}
+            iconLeft={<Icon name='email' />}
+            editable={false}
+          />
+        </View>
+        <View style={styles.buttonContainer}>
+          <Button
+            title={disabled === false ? 'Save details' : 'Edit details'}
+            variant='primary'
+            onPress={
             disabled === false
               ? user
                 ? () => updateProfile(user, username)
                 : () => setDisabled(x => !x)
               : () => setDisabled(x => !x)
           }
-        />
-        <View style={styles.spacer} />
-        <Button
-          title='Logout'
-          variant='tertiary'
-          onPress={logout}
-        />
+          />
+          <View style={styles.spacer} />
+          <Button
+            title='Logout'
+            variant='tertiary'
+            onPress={logout}
+          />
+        </View>
       </View>
-    </View>
+    </KeyboardAvoidingView>
   )
 }
 
@@ -66,26 +72,22 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: theme.colors.backgroundColor,
     alignItems: 'center',
+  },
+  innerContainer: {
+    flex: 1,
+    alignItems: 'center',
     justifyContent: 'space-between',
+    width: '80%'
   },
   header: {
     marginTop: 100,
     fontSize: 20,
   },
   detailsContainer: {
-
-    width: '80%',
-  },
-  input: {
-    backgroundColor: '#fff',
-    paddingHorizontal: 10,
-    paddingVertical: 10,
-    borderRadius: 10,
-    marginTop: 10,
+    width: '100%',
   },
   buttonContainer: {
-    justifyContent: 'flex-end',
-    width: '60%',
+    width: '100%',
     alignItems: 'center',
     marginBottom: 30
   },

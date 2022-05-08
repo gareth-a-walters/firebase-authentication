@@ -13,6 +13,7 @@ const Input = ({
   iconLeft,
   iconRight,
   onPressIconRight,
+  style,
   ...props
 }: InputProps) => {
   const [isFocused, setIsFocused] = useState<boolean>(false)
@@ -37,7 +38,7 @@ const Input = ({
       flex: 1,
       paddingHorizontal: 10,
       paddingVertical: 10,
-    }
+    },
   })
 
   return (
@@ -46,7 +47,7 @@ const Input = ({
       <TextInput
         onFocus={onFocusHandler}
         onBlur={onBlurHandler}
-        style={styles.input}
+        style={[styles.input, style]}
         placeholderTextColor={theme.colors.grey300}
         {...props}
       />

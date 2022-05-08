@@ -38,7 +38,7 @@ const getTabIcon = (f: boolean, n: IconType) => (
     name={n}
     width={30}
     height={30}
-    color={f ? 'primary' : 'lightgrey'}
+    color={f ? 'primary' : 'grey300'}
   />
 )
 
