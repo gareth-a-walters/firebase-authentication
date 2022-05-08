@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import {
-  KeyboardAvoidingView, StyleSheet, Text, View
+  KeyboardAvoidingView, Pressable, StyleSheet, Text, View
 } from 'react-native'
 
 import type { LoginScreenProps } from 'navigation/navigators/loggedOut/types'
@@ -49,11 +49,14 @@ const Login = ({ navigation }: LoginScreenProps) => {
             onPress={() => login(email, password)}
           />
           <View style={styles.spacer} />
-          <Button
-            title='Register'
-            variant='secondary'
-            onPress={() => navigation.navigate('Register')}
-          />
+        </View>
+        <View style={styles.registrationContainer}>
+          <Text>
+            Don&apos;t have an account?
+          </Text>
+          <Pressable onPress={() => navigation.navigate('Register')}>
+            <Text style={styles.link}> Register here</Text>
+          </Pressable>
         </View>
       </View>
     </KeyboardAvoidingView>
@@ -64,11 +67,13 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: theme.colors.backgroundColor,
+    alignItems: 'center'
   },
   innerContainer: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    width: '80%'
   },
   header: {
     fontSize: 36,
@@ -79,16 +84,22 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   inputContainer: {
-    width: '80%',
+    width: '100%',
   },
   buttonContainer: {
     justifyContent: 'flex-end',
-    width: '60%',
+    width: '100%',
     alignItems: 'center',
     marginTop: 50
   },
   spacer: {
     height: 20
+  },
+  registrationContainer: {
+    flexDirection: 'row',
+  },
+  link: {
+    color: theme.colors.secondary
   }
 })
 
