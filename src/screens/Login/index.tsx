@@ -51,12 +51,6 @@ const Login = ({ navigation }: LoginScreenProps) => {
           />
         </View>
         <Separator text='OR' color='grey300' />
-        <View style={styles.buttonsContainer}>
-          <Button title='Google' variant='secondary' onPress={() => console.log('google login')} />
-          <View style={styles.horizontalSpacer} />
-          <Button title='Facebook' variant='secondary' onPress={() => console.log('facebook login')} />
-        </View>
-        <View style={styles.spacer} />
         <View style={styles.registrationContainer}>
           <Text>
             Don&apos;t have an account?
@@ -80,7 +74,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    width: '90%'
+    width: '80%'
   },
   header: {
     fontSize: 36,
@@ -100,14 +94,7 @@ const styles = StyleSheet.create({
   spacer: {
     height: 20
   },
-  buttonsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    width: '50%',
-  },
-  horizontalSpacer: {
-    width: '5%',
-  },
+
   registrationContainer: {
     flexDirection: 'row',
   },

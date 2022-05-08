@@ -10,6 +10,7 @@ import Button from 'elements/Button'
 import Icon from 'elements/Icon'
 import Input from 'elements/Input'
 import PasswordInput from 'elements/PasswordInput'
+import Separator from 'elements/Separator'
 import theme from 'theme'
 
 const Register = ({ navigation }: RegisterScreenProps) => {
@@ -56,8 +57,8 @@ const Register = ({ navigation }: RegisterScreenProps) => {
             variant='primary'
             onPress={() => register(username, email, password)}
           />
-          <View style={styles.spacer} />
         </View>
+        <Separator text='OR' color='grey300' />
         <View style={styles.registrationContainer}>
           <Text>
             Already have an account?
