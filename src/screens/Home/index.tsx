@@ -2,6 +2,7 @@ import React from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 
 import { useUserContext } from 'context/user'
+import theme from 'theme'
 
 const Home = () => {
   const { user } = useUserContext()
@@ -21,7 +22,7 @@ const Home = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#ECEFF1',
+    backgroundColor: theme.colors.backgroundColor,
     alignItems: 'center',
     justifyContent: 'center',
   },

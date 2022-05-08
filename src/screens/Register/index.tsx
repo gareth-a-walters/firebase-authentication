@@ -1,12 +1,16 @@
 import React, { useState } from 'react'
 import {
-  KeyboardAvoidingView, StyleSheet, Text, TextInput, View
+  KeyboardAvoidingView, StyleSheet, Text, View
 } from 'react-native'
 
 import type { RegisterScreenProps } from 'navigation/navigators/loggedOut/types'
 
 import { useUserContext } from 'context/user'
 import Button from 'elements/Button'
+import Icon from 'elements/Icon'
+import Input from 'elements/Input'
+import PasswordInput from 'elements/PasswordInput'
+import theme from 'theme'
 
 const Register = ({ navigation }: RegisterScreenProps) => {
   const [username, setUsername] = useState<string>('')
@@ -24,26 +28,26 @@ const Register = ({ navigation }: RegisterScreenProps) => {
         <Text style={styles.header}>Firebase Auth</Text>
         <Text style={styles.title}>Register for an account</Text>
         <View style={styles.inputContainer}>
-          <TextInput
+          <Input
             placeholder='Username'
             value={username}
             onChangeText={text => setUsername(text)}
-            style={styles.input}
+            iconLeft={<Icon name='profile' />}
           />
-          <TextInput
-            placeholder='Email'
+          <View style={styles.spacer} />
+          <Input
             value={email}
+            placeholder='Email'
             onChangeText={text => setEmail(text)}
-            style={styles.input}
+            iconLeft={<Icon name='email' />}
             keyboardType='email-address'
             autoCapitalize='none'
           />
-          <TextInput
-            placeholder='Password'
+          <View style={styles.spacer} />
+          <PasswordInput
             value={password}
+            placeholder='Password'
             onChangeText={text => setPassword(text)}
-            style={styles.input}
-            secureTextEntry
           />
         </View>
         <View style={styles.buttonContainer}>
@@ -67,7 +71,7 @@ const Register = ({ navigation }: RegisterScreenProps) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#ECEFF1',
+    backgroundColor: theme.colors.backgroundColor
   },
   innerContainer: {
     flex: 1,
@@ -84,13 +88,6 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     width: '80%',
-  },
-  input: {
-    backgroundColor: '#fff',
-    paddingHorizontal: 10,
-    paddingVertical: 10,
-    borderRadius: 10,
-    marginTop: 10,
   },
   buttonContainer: {
     justifyContent: 'flex-end',

@@ -7,6 +7,7 @@ import type { User as FirebaseUser } from 'firebase/auth'
 
 import { useUserContext } from 'context/user'
 import Button from 'elements/Button'
+import theme from 'theme'
 
 const Profile = () => {
   const { user, logout, updateUserProfile } = useUserContext()
@@ -20,7 +21,7 @@ const Profile = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>Profile Screen</Text>
+      <Text style={styles.header}>Profile</Text>
       <View style={styles.detailsContainer}>
         <Text>Username:</Text>
         <TextInput
@@ -63,7 +64,7 @@ const Profile = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#ECEFF1',
+    backgroundColor: theme.colors.backgroundColor,
     alignItems: 'center',
     justifyContent: 'space-between',
   },
