@@ -59,8 +59,8 @@ const Register = ({ navigation }: RegisterScreenProps) => {
           />
         </View>
         <Separator text='OR' color='grey300' />
-        <View style={styles.registrationContainer}>
-          <Text>
+        <View style={styles.linkContainer}>
+          <Text style={styles.preLink}>
             Already have an account?
           </Text>
           <Pressable onPress={() => navigation.navigate('Login')}>
@@ -104,11 +104,15 @@ const styles = StyleSheet.create({
   spacer: {
     height: 20
   },
-  registrationContainer: {
+  linkContainer: {
     flexDirection: 'row',
   },
+  preLink: {
+    fontFamily: theme.fonts.light,
+  },
   link: {
-    color: theme.colors.secondary
+    color: theme.colors.orange700,
+    fontFamily: theme.fonts.medium,
   }
 })
 

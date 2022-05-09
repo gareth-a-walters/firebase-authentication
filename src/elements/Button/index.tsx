@@ -5,6 +5,8 @@ import {
 
 import type { ButtonProps, Style } from 'elements/Button/types'
 
+import theme from 'theme'
+
 const Button = ({
   title,
   variant = 'primary',
@@ -36,24 +38,25 @@ const Button = ({
     },
     text: {
       fontSize: 16,
+      fontFamily: theme.fonts.medium
     }
   }
 
   if (variant === 'primary') {
-    styles.button.backgroundColor = '#039BE5'
-    styles.button.borderColor = '#039BE5'
+    styles.button.backgroundColor = theme.colors.lightBlue600
+    styles.button.borderColor = theme.colors.lightBlue600
     styles.button.borderWidth = 2
-    styles.text.color = '#fff'
+    styles.text.color = theme.colors.white
   } else if (variant === 'secondary') {
-    styles.button.backgroundColor = '#fff'
-    styles.button.borderColor = '#FFA000'
+    styles.button.backgroundColor = theme.colors.white
+    styles.button.borderColor = theme.colors.amber700
     styles.button.borderWidth = 2
-    styles.text.color = '#F57C00'
+    styles.text.color = theme.colors.orange700
   } else if (variant === 'tertiary') {
-    styles.button.backgroundColor = '#FF8A65'
-    styles.button.borderColor = '#FF8A65'
+    styles.button.backgroundColor = theme.colors.deepOrange300
+    styles.button.borderColor = theme.colors.deepOrange300
     styles.button.borderWidth = 2
-    styles.text.color = '#fff'
+    styles.text.color = theme.colors.white
   }
 
   const parsedStyles = StyleSheet.create<Style>(styles)

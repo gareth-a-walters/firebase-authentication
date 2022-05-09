@@ -38,6 +38,7 @@ const Input = ({
       flex: 1,
       paddingHorizontal: 10,
       paddingVertical: 10,
+      fontFamily: theme.fonts.regular,
     },
   })
 

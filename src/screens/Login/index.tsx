@@ -51,8 +51,8 @@ const Login = ({ navigation }: LoginScreenProps) => {
           />
         </View>
         <Separator text='OR' color='grey300' />
-        <View style={styles.registrationContainer}>
-          <Text>
+        <View style={styles.linkContainer}>
+          <Text style={styles.preLink}>
             Don&apos;t have an account?
           </Text>
           <Pressable onPress={() => navigation.navigate('Register')}>
@@ -79,10 +79,12 @@ const styles = StyleSheet.create({
   header: {
     fontSize: 36,
     marginBottom: 48,
+    fontFamily: theme.fonts.regular
   },
   title: {
     fontSize: 18,
     marginBottom: 24,
+    fontFamily: theme.fonts.regular
   },
   inputContainer: {
     width: '100%',
@@ -94,12 +96,15 @@ const styles = StyleSheet.create({
   spacer: {
     height: 20
   },
-
-  registrationContainer: {
+  linkContainer: {
     flexDirection: 'row',
   },
+  preLink: {
+    fontFamily: theme.fonts.light,
+  },
   link: {
-    color: theme.colors.secondary
+    color: theme.colors.orange700,
+    fontFamily: theme.fonts.medium,
   }
 })
 

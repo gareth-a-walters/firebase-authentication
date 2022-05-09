@@ -21,13 +21,16 @@ const Separator = ({ text, color, line }: SeparatorProps) => {
       paddingLeft: 15,
       paddingRight: 15,
     },
+    text: {
+      fontFamily: theme.fonts.medium,
+    }
   })
   return (
     <View style={styles.container}>
       <View style={styles.separator} />
       {Boolean(text) && !line && (
         <View style={styles.textWrapper}>
-          <Text>{text}</Text>
+          <Text style={styles.text}>{text}</Text>
         </View>
       )}
       <View style={styles.separator} />

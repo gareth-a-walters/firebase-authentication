@@ -1,6 +1,7 @@
 import React, { useCallback, useState } from 'react'
 import {
   KeyboardAvoidingView,
+  Pressable,
   StyleSheet, Text, View
 } from 'react-native'
 
@@ -25,12 +26,23 @@ const Profile = () => {
   return (
     <KeyboardAvoidingView style={styles.container}>
       <View style={styles.innerContainer}>
-        <Text style={styles.header}>Profile</Text>
+        <View style={styles.headerIconWrapper}>
+          <View style={styles.iconWrapper} />
+          <View style={styles.headerWrapper}>
+            <Text style={styles.header}>Profile</Text>
+          </View>
+          <View style={styles.iconWrapper}>
+            {disabled && (
+              <Pressable onPress={() => setDisabled(x => !x)}>
+                <Icon name='edit' width={26} height={26} color='black' />
+              </Pressable>
+            )}
+          </View>
+        </View>
         <View style={styles.detailsContainer}>
           <Input
             placeholder='Username'
             value={username}
-            selectionColor={theme.colors.primary}
             onChangeText={text => setUsername(text)}
             iconLeft={<Icon name='profile' />}
             editable={!disabled}
@@ -44,23 +56,31 @@ const Profile = () => {
           />
         </View>
         <View style={styles.buttonContainer}>
-          <Button
-            title={disabled === false ? 'Save details' : 'Edit details'}
-            variant='primary'
-            onPress={
-            disabled === false
-              ? user
-                ? () => updateProfile(user, username)
-                : () => setDisabled(x => !x)
-              : () => setDisabled(x => !x)
-          }
-          />
-          <View style={styles.spacer} />
-          <Button
-            title='Logout'
-            variant='tertiary'
-            onPress={logout}
-          />
+          {disabled ? (
+            <Button
+              title='Logout'
+              variant='tertiary'
+              onPress={logout}
+            />
+          ) : (
+            <View style={styles.buttonsContainer}>
+              <View style={styles.button}>
+                <Button
+                  title='Cancel'
+                  variant='secondary'
+                  onPress={() => setDisabled(x => !x)}
+                />
+              </View>
+              <View style={styles.spacer} />
+              <View style={styles.button}>
+                <Button
+                  title='Save'
+                  variant='primary'
+                  onPress={user ? () => updateProfile(user, username) : () => null}
+                />
+              </View>
+            </View>
+          )}
         </View>
       </View>
     </KeyboardAvoidingView>
@@ -79,20 +99,39 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     width: '80%'
   },
-  header: {
+  headerIconWrapper: {
+    flexDirection: 'row',
     marginTop: 100,
+  },
+  iconWrapper: {
+    width: 26,
+  },
+  headerWrapper: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+  },
+  header: {
     fontSize: 20,
+    fontFamily: theme.fonts.regular,
   },
   detailsContainer: {
     width: '100%',
   },
   buttonContainer: {
     width: '100%',
-    alignItems: 'center',
     marginBottom: 30
   },
+  buttonsContainer: {
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+  },
+  button: {
+    flex: 1,
+  },
   spacer: {
-    height: 20
+    height: 20,
+    width: 20
   }
 })
 
