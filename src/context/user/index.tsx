@@ -27,6 +27,8 @@ export const UserProvider: React.FC = ({ children }) => {
   const [user, setUser] = useState<FirebaseUser | null>(null)
   const [loading, setLoading] = useState<boolean>(true)
 
+  console.log(user)
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, firebaseUser => {
       setUser(firebaseUser)
@@ -35,22 +37,31 @@ export const UserProvider: React.FC = ({ children }) => {
     return unsubscribe
   }, [])
 
-  const updateUserProfile = useCallback(async (user: FirebaseUser, username: string) => {
+  const updateUserProfile = useCallback(async (
+    user: FirebaseUser,
+    username: string,
+    photo: string
+  ) => {
     setLoading(true)
     try {
-      await updateProfile(user, { displayName: username })
+      await updateProfile(user, { displayName: username, photoURL: photo })
     } catch (error) {
       console.log(error)
     }
     setLoading(false)
   }, [])
 
-  const register = useCallback(async (username: string, email: string, password: string) => {
+  const register = useCallback(async (
+    username: string,
+    email: string,
+    password: string,
+    photo: string
+  ) => {
     setLoading(true)
     try {
       await createUserWithEmailAndPassword(auth, email, password)
         .then(async (userCredential: UserCredential) => {
-          await updateUserProfile(userCredential.user, username)
+          await updateUserProfile(userCredential.user, username, photo)
         })
     } catch (error) {
       console.log(error)

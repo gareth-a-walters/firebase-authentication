@@ -11,6 +11,7 @@ import Home from 'assets/icons/home-outline.svg'
 import Lock from 'assets/icons/lock-closed-outline.svg'
 import Email from 'assets/icons/mail-outline.svg'
 import Profile from 'assets/icons/person-outline.svg'
+import Upload from 'assets/icons/upload-outline.svg'
 import theme from 'theme'
 
 export const iconList = {
@@ -21,6 +22,7 @@ export const iconList = {
   home: ({ ...props }: SvgProps) => <Home {...props} />,
   lock: ({ ...props }: SvgProps) => <Lock {...props} />,
   profile: ({ ...props }: SvgProps) => <Profile {...props} />,
+  upload: ({ ...props }: SvgProps) => <Upload {...props} />,
 }
 
 const Icon = ({

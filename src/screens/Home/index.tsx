@@ -7,7 +7,6 @@ import theme from 'theme'
 const Home = () => {
   const { user } = useUserContext()
 
-  console.log(user)
   return (
     <View style={styles.container}>
       <Text style={styles.welcomeMessage}>

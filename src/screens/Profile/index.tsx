@@ -7,6 +7,7 @@ import {
 
 import type { User as FirebaseUser } from 'firebase/auth'
 
+import ProfileImage from 'components/ProfileImage'
 import { useUserContext } from 'context/user'
 import Button from 'elements/Button'
 import Icon from 'elements/Icon'
@@ -15,13 +16,24 @@ import theme from 'theme'
 
 const Profile = () => {
   const { user, logout, updateUserProfile } = useUserContext()
-  const [disabled, setDisabled] = useState<boolean>(true)
+  const [isEditing, setIsEditing] = useState<boolean>(false)
   const [username, setUsername] = useState<string>(user?.displayName || '')
+  const [userImage, setUserImage] = useState<string>(user?.photoURL || '')
 
-  const updateProfile = useCallback((user: FirebaseUser, username: string) => {
-    updateUserProfile(user, username)
-    setDisabled(true)
+  const updateProfile = useCallback((
+    user: FirebaseUser,
+    username: string,
+    photo: string
+  ) => {
+    updateUserProfile(user, username, photo)
+    setIsEditing(false)
   }, [updateUserProfile])
+
+  const cancelEditing = useCallback(() => {
+    setUsername(user?.displayName || '')
+    setUserImage(user?.photoURL || '')
+    setIsEditing(false)
+  }, [user?.displayName, user?.photoURL])
 
   return (
     <KeyboardAvoidingView style={styles.container}>
@@ -32,21 +44,26 @@ const Profile = () => {
             <Text style={styles.header}>Profile</Text>
           </View>
           <View style={styles.iconWrapper}>
-            {disabled && (
-              <Pressable onPress={() => setDisabled(x => !x)}>
+            {!isEditing && (
+              <Pressable onPress={() => setIsEditing(x => !x)}>
                 <Icon name='edit' width={26} height={26} color='black' />
               </Pressable>
             )}
           </View>
         </View>
+        <ProfileImage
+          disabled={!isEditing}
+          userImage={userImage}
+          setUserImage={setUserImage}
+        />
         <View style={styles.detailsContainer}>
           <Input
             placeholder='Username'
             value={username}
             onChangeText={text => setUsername(text)}
             iconLeft={<Icon name='profile' />}
-            editable={!disabled}
-            style={{ color: disabled ? theme.colors.grey300 : theme.colors.black }}
+            editable={isEditing}
+            style={{ color: !isEditing ? theme.colors.grey300 : theme.colors.black }}
           />
           <View style={styles.spacer} />
           <Input
@@ -56,7 +73,7 @@ const Profile = () => {
           />
         </View>
         <View style={styles.buttonContainer}>
-          {disabled ? (
+          {!isEditing ? (
             <Button
               title='Logout'
               variant='tertiary'
@@ -68,7 +85,7 @@ const Profile = () => {
                 <Button
                   title='Cancel'
                   variant='secondary'
-                  onPress={() => setDisabled(x => !x)}
+                  onPress={cancelEditing}
                 />
               </View>
               <View style={styles.spacer} />
@@ -76,7 +93,7 @@ const Profile = () => {
                 <Button
                   title='Save'
                   variant='primary'
-                  onPress={user ? () => updateProfile(user, username) : () => null}
+                  onPress={user ? () => updateProfile(user, username, userImage) : () => null}
                 />
               </View>
             </View>
@@ -97,11 +114,11 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'space-between',
-    width: '80%'
+    width: '80%',
   },
   headerIconWrapper: {
     flexDirection: 'row',
-    marginTop: 100,
+    marginTop: 50,
   },
   iconWrapper: {
     width: 26,

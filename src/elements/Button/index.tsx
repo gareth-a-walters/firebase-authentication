@@ -49,9 +49,9 @@ const Button = ({
     styles.text.color = theme.colors.white
   } else if (variant === 'secondary') {
     styles.button.backgroundColor = theme.colors.white
-    styles.button.borderColor = theme.colors.amber700
+    styles.button.borderColor = theme.colors.grey300
     styles.button.borderWidth = 2
-    styles.text.color = theme.colors.orange700
+    styles.text.color = theme.colors.grey300
   } else if (variant === 'tertiary') {
     styles.button.backgroundColor = theme.colors.deepOrange300
     styles.button.borderColor = theme.colors.deepOrange300
