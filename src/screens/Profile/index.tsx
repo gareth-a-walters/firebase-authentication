@@ -15,25 +15,30 @@ import Input from 'elements/Input'
 import theme from 'theme'
 
 const Profile = () => {
-  const { user, logout, updateUserProfile } = useUserContext()
+  const {
+    user, userDetails, logout, updateUserDetails, uploadUserPhoto
+  } = useUserContext()
   const [isEditing, setIsEditing] = useState<boolean>(false)
-  const [username, setUsername] = useState<string>(user?.displayName || '')
-  const [userImage, setUserImage] = useState<string>(user?.photoURL || '')
+  const [username, setUsername] = useState<string>(userDetails?.displayName || '')
+  const [userImage, setUserImage] = useState<string>(userDetails?.photoURL || '')
+  const [imageToUpload, setImageToUpload] = useState<string>('')
 
   const updateProfile = useCallback((
     user: FirebaseUser,
     username: string,
     photo: string
   ) => {
-    updateUserProfile(user, username, photo)
+    uploadUserPhoto(user, photo)
+    updateUserDetails(user, username)
     setIsEditing(false)
-  }, [updateUserProfile])
+  }, [updateUserDetails, uploadUserPhoto])
 
-  const cancelEditing = useCallback(() => {
-    setUsername(user?.displayName || '')
-    setUserImage(user?.photoURL || '')
+  const cancelEditing = useCallback(async () => {
+    setUsername(userDetails?.displayName || '')
+    setUserImage(userImage)
+    setImageToUpload('')
     setIsEditing(false)
-  }, [user?.displayName, user?.photoURL])
+  }, [userImage, userDetails?.displayName])
 
   return (
     <KeyboardAvoidingView style={styles.container}>
@@ -53,8 +58,9 @@ const Profile = () => {
         </View>
         <ProfileImage
           disabled={!isEditing}
+          imageToUpload={imageToUpload}
+          setImageToUpload={setImageToUpload}
           userImage={userImage}
-          setUserImage={setUserImage}
         />
         <View style={styles.detailsContainer}>
           <Input
@@ -77,7 +83,7 @@ const Profile = () => {
             <Button
               title='Logout'
               variant='tertiary'
-              onPress={logout}
+              onPress={() => logout()}
             />
           ) : (
             <View style={styles.buttonsContainer}>
@@ -93,7 +99,7 @@ const Profile = () => {
                 <Button
                   title='Save'
                   variant='primary'
-                  onPress={user ? () => updateProfile(user, username, userImage) : () => null}
+                  onPress={user ? () => updateProfile(user, username, imageToUpload) : () => null}
                 />
               </View>
             </View>

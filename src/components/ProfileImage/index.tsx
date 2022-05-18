@@ -1,15 +1,16 @@
 import * as ImagePicker from 'expo-image-picker'
-import React, { useCallback } from 'react'
+import React, { useCallback, useState } from 'react'
 import {
   // eslint-disable-next-line react-native/split-platform-components
   ActionSheetIOS,
+  ActivityIndicator,
   Image,
   Pressable,
   StyleSheet,
   View
 } from 'react-native'
 
-import type { ProfileImageProps } from './types'
+import type { ProfileImageProps } from 'components/ProfileImage/types'
 
 import Icon from 'elements/Icon'
 import theme from 'theme'
@@ -17,24 +18,25 @@ import theme from 'theme'
 const ProfileImage = ({
   disabled,
   userImage,
-  setUserImage
+  imageToUpload,
+  setImageToUpload
 }: ProfileImageProps) => {
-  // Opens photos picker
+  const [loading, setLoading] = useState<boolean>(true)
+
   const selectPhoto = useCallback(async () => {
     try {
       const result = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
         allowsEditing: false,
-        quality: 1,
+        quality: 0.001,
       })
       if (result.cancelled) return
-      setUserImage(result.uri)
+      setImageToUpload(result.uri)
     } catch {
       console.error('Failed to fetch photo')
     }
-  }, [setUserImage])
+  }, [setImageToUpload])
 
-  // Opens camera
   const takePhoto = useCallback(async () => {
     try {
       const { status } = await ImagePicker.requestCameraPermissionsAsync()
@@ -45,14 +47,14 @@ const ProfileImage = ({
       const result = await ImagePicker.launchCameraAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
         allowsEditing: false,
-        quality: 1,
+        quality: 0.001,
       })
       if (result.cancelled) return
-      setUserImage(result.uri)
+      setImageToUpload(result.uri)
     } catch {
       console.error('Failed to fetch taken photo')
     }
-  }, [setUserImage])
+  }, [setImageToUpload])
 
   const addPhotoOptions = useCallback(() => {
     ActionSheetIOS.showActionSheetWithOptions(
@@ -74,10 +76,30 @@ const ProfileImage = ({
     <View style={styles.imageIconWrapper}>
       <View style={styles.iconWrapper} />
       <View style={styles.imageContainer}>
-        {userImage
-          ? <Image source={{ uri: userImage }} style={styles.image} />
-          : (<Icon name='profile' width={40} height={40} />
-          )}
+        {imageToUpload !== ''
+          ? (
+            <Image
+              source={{ uri: imageToUpload }}
+              style={styles.image}
+              onLoadStart={() => setLoading(true)}
+              onLoadEnd={() => setLoading(false)}
+            />
+          )
+          : userImage
+            ? (
+              <Image
+                source={{ uri: userImage }}
+                style={styles.image}
+                onLoadStart={() => setLoading(true)}
+                onLoadEnd={() => setLoading(false)}
+              />
+            )
+            : <Icon name='profile' width={40} height={40} />}
+        {loading && (
+          <View style={styles.spinnerContainer}>
+            <ActivityIndicator color={theme.colors.black} />
+          </View>
+        )}
       </View>
       <View style={styles.iconWrapper}>
         {!disabled && (
@@ -112,6 +134,9 @@ const styles = StyleSheet.create({
     borderRadius: 100,
     width: '100%',
     height: '100%',
+  },
+  spinnerContainer: {
+    position: 'absolute',
   }
 })
 

@@ -5,14 +5,14 @@ import { useUserContext } from 'context/user'
 import theme from 'theme'
 
 const Home = () => {
-  const { user } = useUserContext()
+  const { userDetails } = useUserContext()
 
   return (
     <View style={styles.container}>
       <Text style={styles.welcomeMessage}>
         Welcome
         {' '}
-        {user?.displayName}
+        {userDetails?.displayName}
       </Text>
     </View>
   )
