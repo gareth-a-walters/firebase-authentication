@@ -81,7 +81,8 @@ export const UserProvider: React.FC = ({ children }) => {
         displayName,
         email
       })
-    } catch (error) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
       console.log(error)
     }
   }, [])
@@ -143,7 +144,8 @@ export const UserProvider: React.FC = ({ children }) => {
         .then(async (userCredential: UserCredential) => {
           await createUserDocument(userCredential, displayName, email)
         })
-    } catch (error) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
       console.log(error)
     }
     setLoading(false)
@@ -152,7 +154,8 @@ export const UserProvider: React.FC = ({ children }) => {
   const login = useCallback(async (email: string, password: string) => {
     try {
       await signInWithEmailAndPassword(auth, email, password)
-    } catch (error) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
       console.log(error)
     }
     return null
@@ -161,7 +164,8 @@ export const UserProvider: React.FC = ({ children }) => {
   const logout = useCallback(async () => {
     try {
       await signOut(auth)
-    } catch (error) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
       console.log(error)
     }
   }, [])

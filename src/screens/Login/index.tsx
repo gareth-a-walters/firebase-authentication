@@ -1,8 +1,16 @@
-import React, { useState } from 'react'
+import React, { useCallback } from 'react'
+import { useForm, SubmitHandler } from 'react-hook-form'
 import {
-  KeyboardAvoidingView, Pressable, StyleSheet, Text, View
+  Keyboard,
+  KeyboardAvoidingView,
+  Pressable,
+  StyleSheet,
+  Text,
+  TouchableWithoutFeedback,
+  View
 } from 'react-native'
 
+import type { LoginFormValues } from 'entities/Forms'
 import type { LoginScreenProps } from 'navigation/navigators/loggedOut/types'
 
 import { useUserContext } from 'context/user'
@@ -14,52 +22,70 @@ import Separator from 'elements/Separator'
 import theme from 'theme'
 
 const Login = ({ navigation }: LoginScreenProps) => {
-  const [email, setEmail] = useState<string>('')
-  const [password, setPassword] = useState<string>('')
-
   const { login } = useUserContext()
 
+  const { control, handleSubmit, clearErrors } = useForm<LoginFormValues>({
+    defaultValues: {
+      email: '',
+      password: '',
+    }
+  })
+
+  const onSignInPressed: SubmitHandler<LoginFormValues> = useCallback(data => {
+    const { email, password } = data
+    login(email, password)
+  }, [login])
+
+  const navigateToRegister = useCallback(() => {
+    clearErrors()
+    navigation.navigate('Register')
+  }, [clearErrors, navigation])
+
   return (
-    <KeyboardAvoidingView
-      style={styles.container}
-      behavior='padding'
-    >
-      <View style={styles.innerContainer}>
-        <Text style={styles.header}>Firebase Auth</Text>
-        <Text style={styles.title}>Login to your account</Text>
-        <View style={styles.inputContainer}>
-          <Input
-            value={email}
-            placeholder='Email'
-            onChangeText={text => setEmail(text)}
-            iconLeft={<Icon name='email' />}
-            keyboardType='email-address'
-            autoCapitalize='none'
-          />
-          <View style={styles.spacer} />
-          <PasswordInput
-            value={password}
-            placeholder='Password'
-            onChangeText={text => setPassword(text)}
-          />
+    <KeyboardAvoidingView style={styles.container} behavior='padding'>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <View style={styles.innerContainer}>
+          <Text style={styles.header}>Firebase Auth</Text>
+          <Text style={styles.title}>Login to your account</Text>
+          <View style={styles.inputContainer}>
+            <Input
+              name='email'
+              placeholder='Email'
+              control={control}
+              rules={{ required: 'Username is required' }}
+              iconLeft={<Icon name='email' />}
+              keyboardType='email-address'
+              autoCapitalize='none'
+            />
+            <View style={styles.spacer} />
+            <PasswordInput
+              name='password'
+              placeholder='Password'
+              control={control}
+              rules={{ required: 'Password is required' }}
+            />
+          </View>
+          <View style={styles.testContainer}>
+            <View style={styles.buttonContainer}>
+              <Button
+                title='Login'
+                variant='primary'
+                onPress={handleSubmit(onSignInPressed)}
+              />
+            </View>
+            <Separator text='OR' color='grey300' />
+            <View style={styles.linkContainer}>
+              <Text style={styles.preLink}>
+                Don&apos;t have an account?
+              </Text>
+              <Pressable onPress={navigateToRegister}>
+                <Text style={styles.link}> Register here</Text>
+              </Pressable>
+            </View>
+          </View>
+
         </View>
-        <View style={styles.buttonContainer}>
-          <Button
-            title='Login'
-            variant='primary'
-            onPress={() => login(email, password)}
-          />
-        </View>
-        <Separator text='OR' color='grey300' />
-        <View style={styles.linkContainer}>
-          <Text style={styles.preLink}>
-            Don&apos;t have an account?
-          </Text>
-          <Pressable onPress={() => navigation.navigate('Register')}>
-            <Text style={styles.link}> Register here</Text>
-          </Pressable>
-        </View>
-      </View>
+      </TouchableWithoutFeedback>
     </KeyboardAvoidingView>
   )
 }
@@ -72,29 +98,35 @@ const styles = StyleSheet.create({
   },
   innerContainer: {
     flex: 1,
+    display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     width: '80%'
   },
   header: {
     fontSize: 36,
-    marginBottom: 48,
+    marginBottom: 36,
     fontFamily: theme.fonts.regular
   },
   title: {
     fontSize: 18,
-    marginBottom: 24,
+    marginBottom: 40,
     fontFamily: theme.fonts.regular
   },
   inputContainer: {
     width: '100%',
   },
+  testContainer: {
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+  },
   buttonContainer: {
     width: '100%',
-    marginTop: 50,
+    marginTop: 40,
   },
   spacer: {
-    height: 20
+    height: 10
   },
   linkContainer: {
     flexDirection: 'row',

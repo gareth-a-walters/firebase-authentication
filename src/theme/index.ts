@@ -23,7 +23,8 @@ const theme = {
     grey300: '#959FAC',
     grey400: '#6F7C8D',
 
-    backgroundColor: '#ECEFF1'
+    backgroundColor: '#ECEFF1',
+    error: '#B00020',
   }
 }
 

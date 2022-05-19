@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { Keyboard } from 'react-native'
 
 import type { InputProps } from 'elements/Input/types'
 
@@ -15,9 +16,12 @@ const PasswordInput = ({ ...props }: InputProps) => {
   return (
     <Input
       secureTextEntry={!showPassword}
+      textContentType='newPassword'
       onPressIconRight={toggleShowPassword}
       iconLeft={<Icon name='lock' />}
       iconRight={<Icon name={showPassword ? 'eyeClosed' : 'eyeOpen'} />}
+      blurOnSubmit={false}
+      onSubmitEditing={() => Keyboard.dismiss()}
       {...props}
     />
   )

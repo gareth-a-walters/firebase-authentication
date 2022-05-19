@@ -1,6 +1,8 @@
 import { NavigationContainer } from '@react-navigation/native'
 import React from 'react'
-import { ActivityIndicator, View, StyleSheet } from 'react-native'
+import {
+  ActivityIndicator, View, StyleSheet, TouchableWithoutFeedback, Keyboard
+} from 'react-native'
 
 import { useUserContext } from 'context/user'
 import LoggedOutStack from 'navigation/navigators/loggedOut'
@@ -18,11 +20,13 @@ const Navigation = () => {
   }
 
   return (
-    <NavigationContainer>
-      {isLoggedIn
-        ? <RootNavigator />
-        : <LoggedOutStack />}
-    </NavigationContainer>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <NavigationContainer>
+        {isLoggedIn
+          ? <RootNavigator />
+          : <LoggedOutStack />}
+      </NavigationContainer>
+    </TouchableWithoutFeedback>
   )
 }
 

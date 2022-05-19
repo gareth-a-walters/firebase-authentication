@@ -1,11 +1,16 @@
 import React, { useCallback, useState } from 'react'
+import { useForm, SubmitHandler } from 'react-hook-form'
 import {
+  Keyboard,
   KeyboardAvoidingView,
   Pressable,
-  StyleSheet, Text, View
+  StyleSheet,
+  Text,
+  TouchableWithoutFeedback,
+  View
 } from 'react-native'
 
-import type { User as FirebaseUser } from 'firebase/auth'
+import type { ProfileFormValues } from 'entities/Forms'
 
 import ProfileImage from 'components/ProfileImage'
 import { useUserContext } from 'context/user'
@@ -18,94 +23,118 @@ const Profile = () => {
   const {
     user, userDetails, logout, updateUserDetails, uploadUserPhoto
   } = useUserContext()
-  const [isEditing, setIsEditing] = useState<boolean>(false)
-  const [username, setUsername] = useState<string>(userDetails?.displayName || '')
   const [userImage, setUserImage] = useState<string>(userDetails?.photoURL || '')
   const [imageToUpload, setImageToUpload] = useState<string>('')
+  const [isEditing, setIsEditing] = useState<boolean>(false)
 
-  const updateProfile = useCallback((
-    user: FirebaseUser,
-    username: string,
-    photo: string
-  ) => {
-    uploadUserPhoto(user, photo)
-    updateUserDetails(user, username)
-    setIsEditing(false)
-  }, [updateUserDetails, uploadUserPhoto])
+  console.log(imageToUpload)
 
-  const cancelEditing = useCallback(async () => {
-    setUsername(userDetails?.displayName || '')
-    setUserImage(userImage)
+  const { control, handleSubmit, reset } = useForm<ProfileFormValues>({
+    defaultValues: {
+      username: userDetails?.displayName,
+      email: userDetails?.email,
+    }
+  })
+
+  const onSaveProfile: SubmitHandler<ProfileFormValues> = useCallback(
+    async data => {
+      const { username } = data
+      if (user && imageToUpload !== '') {
+        await uploadUserPhoto(user, imageToUpload)
+      }
+      if (user && username !== userDetails?.displayName) {
+        await updateUserDetails(user, username)
+      }
+      setIsEditing(false)
+    },
+    [
+      imageToUpload,
+      updateUserDetails,
+      uploadUserPhoto,
+      user,
+      userDetails?.displayName
+    ]
+  )
+
+  const cancelEditing = useCallback(() => {
+    reset()
     setImageToUpload('')
+    setUserImage(userImage)
     setIsEditing(false)
-  }, [userImage, userDetails?.displayName])
+  }, [reset, userImage])
 
   return (
-    <KeyboardAvoidingView style={styles.container}>
-      <View style={styles.innerContainer}>
-        <View style={styles.headerIconWrapper}>
-          <View style={styles.iconWrapper} />
-          <View style={styles.headerWrapper}>
-            <Text style={styles.header}>Profile</Text>
-          </View>
-          <View style={styles.iconWrapper}>
-            {!isEditing && (
+    <KeyboardAvoidingView style={styles.container} behavior='padding'>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <View style={styles.innerContainer}>
+          <View style={styles.headerIconWrapper}>
+            <View style={styles.iconWrapper} />
+            <View style={styles.headerWrapper}>
+              <Text style={styles.header}>Profile</Text>
+            </View>
+            <View style={styles.iconWrapper}>
+              {!isEditing && (
               <Pressable onPress={() => setIsEditing(x => !x)}>
                 <Icon name='edit' width={26} height={26} color='black' />
               </Pressable>
+              )}
+            </View>
+          </View>
+          <ProfileImage
+            disabled={!isEditing}
+            imageToUpload={imageToUpload}
+            setImageToUpload={setImageToUpload}
+            userImage={userImage}
+          />
+          <View style={styles.detailsContainer}>
+            <Input
+              name='username'
+              placeholder='Username'
+              control={control}
+              rules={{ required: 'Username is required' }}
+              iconLeft={<Icon name='profile' />}
+              editable={isEditing}
+              style={{ color: !isEditing ? theme.colors.grey300 : theme.colors.black }}
+            />
+            <View style={styles.spacer} />
+            <Input
+              name='email'
+              control={control}
+              placeholder='Email'
+              iconLeft={<Icon name='email' />}
+              style={{ color: theme.colors.grey300 }}
+              editable={false}
+            />
+          </View>
+          <View style={styles.buttonContainer}>
+            {!isEditing ? (
+              <Button
+                title='Logout'
+                variant='tertiary'
+                onPress={() => logout()}
+              />
+            ) : (
+              <View style={styles.buttonsContainer}>
+                <View style={styles.button}>
+                  <Button
+                    title='Cancel'
+                    variant='secondary'
+                    onPress={cancelEditing}
+                  />
+                </View>
+                <View style={styles.spacer} />
+                <View style={styles.button}>
+                  <Button
+                    title='Save'
+                    variant='primary'
+                    onPress={handleSubmit(onSaveProfile)}
+                  />
+                </View>
+              </View>
             )}
           </View>
         </View>
-        <ProfileImage
-          disabled={!isEditing}
-          imageToUpload={imageToUpload}
-          setImageToUpload={setImageToUpload}
-          userImage={userImage}
-        />
-        <View style={styles.detailsContainer}>
-          <Input
-            placeholder='Username'
-            value={username}
-            onChangeText={text => setUsername(text)}
-            iconLeft={<Icon name='profile' />}
-            editable={isEditing}
-            style={{ color: !isEditing ? theme.colors.grey300 : theme.colors.black }}
-          />
-          <View style={styles.spacer} />
-          <Input
-            placeholder={user?.email || ''}
-            iconLeft={<Icon name='email' />}
-            editable={false}
-          />
-        </View>
-        <View style={styles.buttonContainer}>
-          {!isEditing ? (
-            <Button
-              title='Logout'
-              variant='tertiary'
-              onPress={() => logout()}
-            />
-          ) : (
-            <View style={styles.buttonsContainer}>
-              <View style={styles.button}>
-                <Button
-                  title='Cancel'
-                  variant='secondary'
-                  onPress={cancelEditing}
-                />
-              </View>
-              <View style={styles.spacer} />
-              <View style={styles.button}>
-                <Button
-                  title='Save'
-                  variant='primary'
-                  onPress={user ? () => updateProfile(user, username, imageToUpload) : () => null}
-                />
-              </View>
-            </View>
-          )}
-        </View>
-      </View>
+      </TouchableWithoutFeedback>
     </KeyboardAvoidingView>
   )
 }
