@@ -4,6 +4,7 @@ import React from 'react'
 import type { AllLoggedOutScreensProps, LoggedOutStackParamList } from 'navigation/navigators/loggedOut/types'
 import type { StackScreensDataParams } from 'navigation/types'
 
+import ForgotPassword from 'screens/ForgotPassword'
 import Login from 'screens/Login'
 import Register from 'screens/Register'
 
@@ -13,6 +14,7 @@ AllLoggedOutScreensProps
 > = [
   { name: 'Login', component: Login },
   { name: 'Register', component: Register },
+  { name: 'ForgotPassword', component: ForgotPassword },
 ]
 
 const loggedOutStackOptions = {

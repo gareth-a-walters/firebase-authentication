@@ -9,6 +9,10 @@ export type RegisterFormValues = {
   password: string
 }
 
+export type ForgotPasswordFormValues = {
+  email: string
+}
+
 export type ProfileFormValues = {
   username: string
   email: string

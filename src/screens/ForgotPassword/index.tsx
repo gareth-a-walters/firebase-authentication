@@ -1,4 +1,4 @@
-import { yupResolver } from '@hookform/resolvers/yup'
+import { sendPasswordResetEmail } from 'firebase/auth'
 import React, { useCallback } from 'react'
 import { useForm, SubmitHandler } from 'react-hook-form'
 import {
@@ -10,55 +10,59 @@ import {
   TouchableWithoutFeedback,
   View
 } from 'react-native'
-import * as yup from 'yup'
+import Toast from 'react-native-toast-message'
 
-import type { RegisterFormValues } from 'entities/Forms'
-import type { RegisterScreenProps } from 'navigation/navigators/loggedOut/types'
+import type { ForgotPasswordFormValues } from 'entities/Forms'
+import type { ForgotPasswordScreenProps } from 'navigation/navigators/loggedOut/types'
 
-import { useUserContext } from 'context/user'
+import { auth } from '../../firebaseConfig'
+
 import Button from 'elements/Button'
 import Icon from 'elements/Icon'
 import Input from 'elements/Input'
-import PasswordInput from 'elements/PasswordInput'
 import Separator from 'elements/Separator'
 import theme from 'theme'
-import { passwordValidations } from 'utils/formUtils'
 
-const {
-  lowercase,
-  uppercase,
-  number,
-  symbol
-} = passwordValidations
-
-const Register = ({ navigation }: RegisterScreenProps) => {
-  const { register } = useUserContext()
-
-  const schema = yup.object({
-    username: yup.string().required('Username is required'),
-    email: yup.string().email('Invalid email').required('Email is required'),
-    password: yup.string()
-      .required('Password is required')
-      .min(8, 'Password must be at least 8 characters')
-      .matches(lowercase.regex, lowercase.message)
-      .matches(uppercase.regex, uppercase.message)
-      .matches(number.regex, number.message)
-      .matches(symbol.regex, symbol.message)
-  })
-
-  const { control, handleSubmit, clearErrors } = useForm<RegisterFormValues>({
+const ForgotPassword = ({ navigation }: ForgotPasswordScreenProps) => {
+  const {
+    control, handleSubmit, clearErrors
+  } = useForm<ForgotPasswordFormValues>({
     defaultValues: {
-      username: '',
       email: '',
-      password: '',
-    },
-    resolver: yupResolver(schema)
+    }
   })
 
-  const onRegisterPressed: SubmitHandler<RegisterFormValues> = useCallback(data => {
-    const { username, email, password } = data
-    register(username, email, password)
-  }, [register])
+  const recoverPassword = useCallback(async (email: string) => {
+    try {
+      await sendPasswordResetEmail(auth, email)
+      Toast.show({
+        type: 'success',
+        text1: 'Password recovery email sent',
+        text2: 'Please check your inbox',
+      })
+      navigation.navigate('Login')
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      if (error.code === 'auth/user-not-found') {
+        Toast.show({
+          type: 'error',
+          text1: 'Could not find an account with that email',
+          text2: 'Please check provided email address',
+        })
+      } else {
+        Toast.show({
+          type: 'error',
+          text1: 'Error sending password recovery email',
+          text2: 'Please try again later',
+        })
+      }
+    }
+  }, [navigation])
+
+  const onSubmitPressed: SubmitHandler<ForgotPasswordFormValues> = useCallback(data => {
+    const { email } = data
+    recoverPassword(email)
+  }, [recoverPassword])
 
   const navigateToLogin = useCallback(() => {
     clearErrors()
@@ -70,43 +74,30 @@ const Register = ({ navigation }: RegisterScreenProps) => {
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={styles.innerContainer}>
           <Text style={styles.header}>Firebase Auth</Text>
-          <Text style={styles.title}>Register for an account</Text>
+          <Text style={styles.title}>Forgot your password?</Text>
           <View style={styles.inputContainer}>
-            <Input
-              name='username'
-              placeholder='Username'
-              control={control}
-              iconLeft={<Icon name='profile' />}
-            />
-            <View style={styles.spacer} />
             <Input
               name='email'
               placeholder='Email'
               control={control}
+              rules={{ required: 'Email is required' }}
               iconLeft={<Icon name='email' />}
               keyboardType='email-address'
-              autoCompleteType='off'
-              autoCorrect={false}
               autoCapitalize='none'
-            />
-            <View style={styles.spacer} />
-            <PasswordInput
-              name='password'
-              placeholder='Password'
-              control={control}
+              autoCorrect={false}
             />
           </View>
           <View style={styles.buttonContainer}>
             <Button
-              title='Create account'
+              title='Recover Password'
               variant='primary'
-              onPress={handleSubmit(onRegisterPressed)}
+              onPress={handleSubmit(onSubmitPressed)}
             />
           </View>
           <Separator text='OR' color='grey300' />
           <View style={styles.linkContainer}>
             <Text style={styles.preLink}>
-              Already have an account?
+              Remember your password?
             </Text>
             <Pressable onPress={navigateToLogin}>
               <Text style={styles.link}> Login here</Text>
@@ -126,17 +117,20 @@ const styles = StyleSheet.create({
   },
   innerContainer: {
     flex: 1,
+    display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     width: '80%'
   },
   header: {
     fontSize: 36,
-    marginBottom: 24,
+    marginBottom: 36,
+    fontFamily: theme.fonts.regular
   },
   title: {
     fontSize: 18,
     marginBottom: 40,
+    fontFamily: theme.fonts.regular
   },
   inputContainer: {
     width: '100%',
@@ -144,9 +138,6 @@ const styles = StyleSheet.create({
   buttonContainer: {
     width: '100%',
     marginTop: 40
-  },
-  spacer: {
-    height: 10
   },
   linkContainer: {
     flexDirection: 'row',
@@ -160,4 +151,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default Register
+export default ForgotPassword

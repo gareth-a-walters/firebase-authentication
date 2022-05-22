@@ -41,6 +41,11 @@ const Login = ({ navigation }: LoginScreenProps) => {
     navigation.navigate('Register')
   }, [clearErrors, navigation])
 
+  const navigateToForgotPassword = useCallback(() => {
+    clearErrors()
+    navigation.navigate('ForgotPassword')
+  }, [clearErrors, navigation])
+
   return (
     <KeyboardAvoidingView style={styles.container} behavior='padding'>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -56,6 +61,7 @@ const Login = ({ navigation }: LoginScreenProps) => {
               iconLeft={<Icon name='email' />}
               keyboardType='email-address'
               autoCapitalize='none'
+              autoCorrect={false}
             />
             <View style={styles.spacer} />
             <PasswordInput
@@ -64,26 +70,26 @@ const Login = ({ navigation }: LoginScreenProps) => {
               control={control}
               rules={{ required: 'Password is required' }}
             />
+            <Pressable onPress={navigateToForgotPassword}>
+              <Text style={[styles.link, styles.forgotPassword]}>Forgot Password?</Text>
+            </Pressable>
           </View>
-          <View style={styles.testContainer}>
-            <View style={styles.buttonContainer}>
-              <Button
-                title='Login'
-                variant='primary'
-                onPress={handleSubmit(onSignInPressed)}
-              />
-            </View>
-            <Separator text='OR' color='grey300' />
-            <View style={styles.linkContainer}>
-              <Text style={styles.preLink}>
-                Don&apos;t have an account?
-              </Text>
-              <Pressable onPress={navigateToRegister}>
-                <Text style={styles.link}> Register here</Text>
-              </Pressable>
-            </View>
+          <View style={styles.buttonContainer}>
+            <Button
+              title='Login'
+              variant='primary'
+              onPress={handleSubmit(onSignInPressed)}
+            />
           </View>
-
+          <Separator text='OR' color='grey300' />
+          <View style={styles.linkContainer}>
+            <Text style={styles.preLink}>
+              Don&apos;t have an account?
+            </Text>
+            <Pressable onPress={navigateToRegister}>
+              <Text style={styles.link}> Register here</Text>
+            </Pressable>
+          </View>
         </View>
       </TouchableWithoutFeedback>
     </KeyboardAvoidingView>
@@ -116,11 +122,6 @@ const styles = StyleSheet.create({
   inputContainer: {
     width: '100%',
   },
-  testContainer: {
-    width: '100%',
-    alignItems: 'center',
-    justifyContent: 'flex-start',
-  },
   buttonContainer: {
     width: '100%',
     marginTop: 40,
@@ -130,6 +131,9 @@ const styles = StyleSheet.create({
   },
   linkContainer: {
     flexDirection: 'row',
+  },
+  forgotPassword: {
+    textAlign: 'right',
   },
   preLink: {
     fontFamily: theme.fonts.light,

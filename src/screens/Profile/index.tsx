@@ -27,8 +27,6 @@ const Profile = () => {
   const [imageToUpload, setImageToUpload] = useState<string>('')
   const [isEditing, setIsEditing] = useState<boolean>(false)
 
-  console.log(imageToUpload)
-
   const { control, handleSubmit, reset } = useForm<ProfileFormValues>({
     defaultValues: {
       username: userDetails?.displayName,

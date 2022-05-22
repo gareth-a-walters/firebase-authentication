@@ -5,6 +5,7 @@ import {
   signOut,
   User as FirebaseUser,
   UserCredential,
+  updateProfile,
 } from 'firebase/auth'
 import {
   setDoc, doc, getDoc, updateDoc
@@ -52,25 +53,17 @@ export const UserProvider: React.FC = ({ children }) => {
   useEffect(() => {
     setLoading(true)
     const unsubscribe = onAuthStateChanged(auth, firebaseUser => {
-      setUser(firebaseUser)
       if (firebaseUser) {
+        setUser(firebaseUser)
         getUserDocument(firebaseUser)
       } else {
+        setUser(null)
         setUserDetails(null)
       }
     })
     setLoading(false)
     return unsubscribe
-  }, [getUserDocument])
-
-  const updateUserDetails = useCallback(async (user: FirebaseUser, displayName: string) => {
-    const userRef = doc(firestore, 'users', user.uid)
-
-    await updateDoc(userRef, {
-      displayName,
-    })
-    getUserDocument(user)
-  }, [getUserDocument])
+  }, [getUserDocument, user])
 
   const createUserDocument = useCallback(async (
     userCredential: UserCredential,
@@ -88,6 +81,61 @@ export const UserProvider: React.FC = ({ children }) => {
       console.log(error)
     }
   }, [])
+
+  const register = useCallback(async (
+    displayName: string,
+    email: string,
+    password: string,
+  ) => {
+    try {
+      await createUserWithEmailAndPassword(auth, email, password)
+        .then(async (userCredential: UserCredential) => {
+          await createUserDocument(userCredential, displayName, email)
+        })
+        .then(async () => {
+          await updateProfile(auth?.currentUser as FirebaseUser, { displayName })
+        })
+      Toast.show({
+        type: 'success',
+        text1: 'Account created',
+        text2: `Welcome ${displayName}`,
+      })
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      if (error.code === 'auth/email-already-in-use') {
+        Toast.show({
+          type: 'error',
+          text1: 'Email is already in use',
+          text2: 'Please login or try another email',
+        })
+      } else {
+        Toast.show({
+          type: 'error',
+          text1: 'Error',
+          text2: error.message,
+        })
+      }
+    }
+  }, [createUserDocument])
+
+  const updateUserDetails = useCallback(async (user: FirebaseUser, displayName: string) => {
+    const userRef = doc(firestore, 'users', user.uid)
+
+    try {
+      await updateDoc(userRef, { displayName })
+      await updateProfile(auth?.currentUser as FirebaseUser, { displayName })
+      Toast.show({
+        type: 'success',
+        text1: 'Profile updated',
+      })
+      getUserDocument(user)
+    } catch (error) {
+      Toast.show({
+        type: 'error',
+        text1: 'Error updating Profile',
+      })
+    }
+  }, [getUserDocument])
 
   const uploadUserPhoto = useCallback(async (user: FirebaseUser, uri: string) => {
     const response = await fetch(uri)
@@ -125,24 +173,6 @@ export const UserProvider: React.FC = ({ children }) => {
     )
   }, [])
 
-  const register = useCallback(async (
-    displayName: string,
-    email: string,
-    password: string,
-  ) => {
-    setLoading(true)
-    try {
-      await createUserWithEmailAndPassword(auth, email, password)
-        .then(async (userCredential: UserCredential) => {
-          await createUserDocument(userCredential, displayName, email)
-        })
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (error: any) {
-      console.log(error)
-    }
-    setLoading(false)
-  }, [createUserDocument])
-
   const login = useCallback(async (email: string, password: string) => {
     try {
       await signInWithEmailAndPassword(auth, email, password)
@@ -174,11 +204,13 @@ export const UserProvider: React.FC = ({ children }) => {
         {
           text: 'OK',
           onPress: async () => {
+            setLoading(true)
             try {
               await signOut(auth)
             } catch (error) {
               console.log(error)
             }
+            setLoading(false)
           }
         }],
     )
@@ -207,7 +239,7 @@ export const UserProvider: React.FC = ({ children }) => {
 
   return (
     <Provider value={value}>
-      {!loading && children}
+      {children}
     </Provider>
   )
 }

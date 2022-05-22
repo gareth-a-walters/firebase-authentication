@@ -51,7 +51,6 @@ const Input = ({
     },
     error: {
       marginTop: 5,
-      textAlign: 'right',
       color: theme.colors.error,
     }
   })
