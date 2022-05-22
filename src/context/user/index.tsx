@@ -20,6 +20,8 @@ import React, {
   useMemo,
   useState,
 } from 'react'
+import { Alert } from 'react-native'
+import Toast from 'react-native-toast-message'
 
 import type { UserContextValues } from 'context/user/types'
 import type { UserDetails } from 'entities/UserDetails'
@@ -111,17 +113,7 @@ export const UserProvider: React.FC = ({ children }) => {
         }
       },
       error => {
-        switch (error.code) {
-          case 'storage/unauthorized':
-            // User doesn't have permission to access the object
-            break
-          case 'storage/canceled':
-            // User canceled the upload
-            break
-          case 'storage/unknown':
-            // Unknown error occurred, inspect error.serverResponse
-            break
-        }
+        console.log(error)
       },
       () => {
         getDownloadURL(uploadTask.snapshot.ref).then(async downloadURL => {
@@ -156,18 +148,40 @@ export const UserProvider: React.FC = ({ children }) => {
       await signInWithEmailAndPassword(auth, email, password)
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
-      console.log(error)
+      if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password' || error.code === 'auth/invalid-email') {
+        Toast.show({
+          type: 'error',
+          text1: 'Incorrect credentials',
+          text2: 'Invalid email or password',
+        })
+      } else {
+        Toast.show({
+          type: 'error',
+          text1: 'Error',
+          text2: error.message,
+        })
+      }
     }
     return null
   }, [])
 
-  const logout = useCallback(async () => {
-    try {
-      await signOut(auth)
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (error: any) {
-      console.log(error)
-    }
+  const logout = useCallback(() => {
+    Alert.alert(
+      'Logout',
+      'Are you sure you want to logout?',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'OK',
+          onPress: async () => {
+            try {
+              await signOut(auth)
+            } catch (error) {
+              console.log(error)
+            }
+          }
+        }],
+    )
   }, [])
 
   const value = useMemo(() => ({

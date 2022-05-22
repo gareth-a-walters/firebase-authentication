@@ -43,10 +43,7 @@ const Register = ({ navigation }: RegisterScreenProps) => {
       .matches(lowercase.regex, lowercase.message)
       .matches(uppercase.regex, uppercase.message)
       .matches(number.regex, number.message)
-      .matches(symbol.regex, symbol.message),
-    confirmPassword: yup.string()
-      .oneOf([yup.ref('password'), null], 'Passwords must match')
-      .required('Password confirmation is required')
+      .matches(symbol.regex, symbol.message)
   })
 
   const { control, handleSubmit, clearErrors } = useForm<RegisterFormValues>({
@@ -54,12 +51,12 @@ const Register = ({ navigation }: RegisterScreenProps) => {
       username: '',
       email: '',
       password: '',
-      confirmPassword: '',
     },
     resolver: yupResolver(schema)
   })
 
-  const onRegisterPressed: SubmitHandler<RegisterFormValues> = useCallback(data => {
+  const onRegisterPressed: SubmitHandler<RegisterFormValues> = useCallback((data, event) => {
+    event?.stopPropagation()
     const { username, email, password } = data
     register(username, email, password)
   }, [register])
@@ -97,18 +94,12 @@ const Register = ({ navigation }: RegisterScreenProps) => {
               placeholder='Password'
               control={control}
             />
-            <View style={styles.spacer} />
-            <PasswordInput
-              name='confirmPassword'
-              placeholder='Confirm Password'
-              control={control}
-            />
           </View>
           <View style={styles.buttonContainer}>
             <Button
               title='Create account'
               variant='primary'
-              onPress={handleSubmit(onRegisterPressed)}
+              onPress={handleSubmit((data, event) => onRegisterPressed(data, event))}
             />
           </View>
           <Separator text='OR' color='grey300' />

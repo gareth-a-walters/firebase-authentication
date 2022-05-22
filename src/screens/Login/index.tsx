@@ -52,7 +52,7 @@ const Login = ({ navigation }: LoginScreenProps) => {
               name='email'
               placeholder='Email'
               control={control}
-              rules={{ required: 'Username is required' }}
+              rules={{ required: 'Email is required' }}
               iconLeft={<Icon name='email' />}
               keyboardType='email-address'
               autoCapitalize='none'

@@ -1,5 +1,6 @@
 import { useFonts } from 'expo-font'
 import React from 'react'
+import Toast from 'react-native-toast-message'
 
 import { UserProvider } from 'context/user'
 import Navigation from 'navigation'
@@ -18,6 +19,7 @@ const App = () => {
   return (
     <UserProvider>
       <Navigation />
+      <Toast />
     </UserProvider>
   )
 }

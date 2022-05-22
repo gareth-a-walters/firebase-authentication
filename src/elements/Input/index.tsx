@@ -1,7 +1,13 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Controller } from 'react-hook-form'
 import {
-  NativeSyntheticEvent, Pressable, StyleSheet, Text, TextInput, TextInputFocusEventData, View
+  NativeSyntheticEvent,
+  Pressable,
+  StyleSheet,
+  Text,
+  TextInput,
+  TextInputFocusEventData,
+  View
 } from 'react-native'
 
 import type { InputProps } from 'elements/Input/types'
@@ -13,31 +19,26 @@ const Input = ({
   name,
   placeholder,
   rules = {},
-  // onFocus,
-  // onBlur,
+  onFocus,
   iconLeft,
   iconRight,
   onPressIconRight,
   style,
   ...props
 }: InputProps) => {
-  // const [isFocused, setIsFocused] = useState<boolean>(false)
+  const [isFocused, setIsFocused] = useState<boolean>(false)
 
-  // const onFocusHandler = (e: NativeSyntheticEvent<TextInputFocusEventData>) => {
-  //   setIsFocused(true)
-  //   onFocus && onFocus(e)
-  // }
-  // const onBlurHandler = (e: NativeSyntheticEvent<TextInputFocusEventData>) => {
-  //   setIsFocused(false)
-  //   onBlur && onBlur(e)
-  // }
+  const onFocusHandler = (e: NativeSyntheticEvent<TextInputFocusEventData>) => {
+    setIsFocused(true)
+    onFocus && onFocus(e)
+  }
 
   const styles = StyleSheet.create({
     inputContainer: {
       flexDirection: 'row',
       alignItems: 'center',
       borderBottomWidth: 1,
-      // borderBottomColor: isFocused ? theme.colors.grey400 : theme.colors.grey100,
+      borderBottomColor: isFocused ? theme.colors.grey400 : theme.colors.grey100,
     },
     input: {
       flex: 1,
@@ -72,10 +73,9 @@ const Input = ({
             <TextInput
               value={value}
               onChangeText={onChange}
-              onBlur={onBlur}
+              onBlur={() => { onBlur(); setIsFocused(false) }}
               placeholder={placeholder}
-            // onFocus={onFocusHandler}
-            // onBlur={onBlurHandler}
+              onFocus={onFocusHandler}
               style={[styles.input, style]}
               placeholderTextColor={theme.colors.grey300}
               {...props}

@@ -10,5 +10,5 @@ export type UserContextValues = {
   uploadUserPhoto: (user: FirebaseUser, uri: string) => Promise<void>
   register: (username: string, email: string, password:string) => Promise<void>
   login: (email: string, password: string) => Promise<null>
-  logout: () => Promise<void>
+  logout: () => void
 }
