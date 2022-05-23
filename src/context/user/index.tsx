@@ -167,9 +167,12 @@ export const UserProvider: React.FC = ({ children }) => {
         getDownloadURL(uploadTask.snapshot.ref).then(async downloadURL => {
           await updateDoc(userRef, {
             photoURL: downloadURL
-          })
+          }).then(() => getUserDocument(user))
         })
-        getUserDocument(user)
+        Toast.show({
+          type: 'success',
+          text1: 'Profile updated',
+        })
       }
     )
   }, [getUserDocument])

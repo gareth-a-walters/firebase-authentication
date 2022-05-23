@@ -11,7 +11,7 @@ module.exports = function(api) {
             components: './src/components',
             context: './src/context',
             elements: './src/elements',
-            // entities: './src/entities',
+            entities: './src/entities',
             navigation: './src/navigation',
             screens: './src/screens',
             theme: './src/theme',
