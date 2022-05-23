@@ -169,9 +169,10 @@ export const UserProvider: React.FC = ({ children }) => {
             photoURL: downloadURL
           })
         })
+        getUserDocument(user)
       }
     )
-  }, [])
+  }, [getUserDocument])
 
   const login = useCallback(async (email: string, password: string) => {
     try {

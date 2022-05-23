@@ -72,7 +72,7 @@ const Profile = () => {
             </View>
             <View style={styles.iconWrapper}>
               {!isEditing && (
-              <Pressable onPress={() => setIsEditing(x => !x)}>
+              <Pressable style={styles.pressableContainer} onPress={() => setIsEditing(x => !x)}>
                 <Icon name='edit' width={26} height={26} color='black' />
               </Pressable>
               )}
@@ -154,7 +154,11 @@ const styles = StyleSheet.create({
     marginTop: 50,
   },
   iconWrapper: {
-    width: 26,
+    width: 36,
+    height: 36,
+  },
+  pressableContainer: {
+    padding: 5,
   },
   headerWrapper: {
     flex: 1,

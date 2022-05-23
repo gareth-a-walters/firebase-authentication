@@ -103,8 +103,8 @@ const ProfileImage = ({
       </View>
       <View style={styles.iconWrapper}>
         {!disabled && (
-        <Pressable onPress={addPhotoOptions}>
-          <Icon name='upload' width={30} height={30} />
+        <Pressable style={styles.pressableContainer} onPress={addPhotoOptions}>
+          <Icon name='add' width={26} height={26} color='grey300' />
         </Pressable>
         )}
       </View>
@@ -117,8 +117,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   iconWrapper: {
-    width: 30,
-    justifyContent: 'flex-end',
+    position: 'absolute',
+    bottom: 10,
+    right: 10,
+
   },
   imageContainer: {
     justifyContent: 'center',
@@ -137,6 +139,18 @@ const styles = StyleSheet.create({
   },
   spinnerContainer: {
     position: 'absolute',
+  },
+  pressableContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 100,
+    borderWidth: 2,
+    borderColor: theme.colors.grey300,
+    backgroundColor: theme.colors.white,
+    width: 40,
+    height: 40,
+    paddingVertical: 10,
+    paddingHorizontal: 10,
   }
 })
 
