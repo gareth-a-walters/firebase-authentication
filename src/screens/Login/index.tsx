@@ -13,11 +13,11 @@ import {
 import type { LoginFormValues } from 'entities/Forms'
 import type { LoginScreenProps } from 'navigation/navigators/loggedOut/types'
 
+import PasswordInput from 'components/PasswordInput'
 import { useUserContext } from 'context/user'
 import Button from 'elements/Button'
 import Icon from 'elements/Icon'
 import Input from 'elements/Input'
-import PasswordInput from 'elements/PasswordInput'
 import Separator from 'elements/Separator'
 import theme from 'theme'
 
